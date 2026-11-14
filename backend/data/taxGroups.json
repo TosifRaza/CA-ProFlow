@@ -1,0 +1,34 @@
+[
+  {
+    "id": 4,
+    "taxName": "dfgsfgdsfgd",
+    "frequency": null,
+    "date": null,
+    "createdAt": "2026-11-14T12:26:12.075Z",
+    "updatedAt": "2026-11-14T12:26:12.075Z"
+  },
+  {
+    "id": 1,
+    "taxName": "Goods & Services Tax (GST)",
+    "frequency": null,
+    "date": null,
+    "createdAt": "2026-11-14T11:45:00.000Z",
+    "updatedAt": "2026-11-14T11:45:00.000Z"
+  },
+  {
+    "id": 2,
+    "taxName": "Direct Taxes & Income Tax",
+    "frequency": null,
+    "date": null,
+    "createdAt": "2026-11-14T11:46:00.000Z",
+    "updatedAt": "2026-11-14T11:46:00.000Z"
+  },
+  {
+    "id": 3,
+    "taxName": "Tax Deducted at Source (TDS)",
+    "frequency": null,
+    "date": null,
+    "createdAt": "2026-11-14T11:47:00.000Z",
+    "updatedAt": "2026-11-14T11:47:00.000Z"
+  }
+]

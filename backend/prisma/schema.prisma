@@ -1,0 +1,43 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model TaxGroup {
+  id        Int       @id @default(autoincrement())
+  taxName   String
+  frequency String?
+  date      DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model TaxDetail {
+  id                 Int       @id @default(autoincrement())
+  description        String
+  frequency          String?
+  dateFrom           DateTime?
+  dateTo             DateTime?
+  timeFrom           String?
+  timeTo             String?
+  submissionDate     DateTime
+  reconciliationDate DateTime
+  extendDate         DateTime
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model WorkMaster {
+  id          Int      @id @default(autoincrement())
+  workName    String
+  taxGroup    String?
+  taxGroupId  Int?
+  typeOfWork  String
+  taxDetailId Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -127,24 +127,6 @@ const TaxGroupPage = () => {
         </div>
       </div>
 
-      {/* Hero Stats */}
-      <div className="max-w-xs">
-        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
-              Registered Groups
-            </span>
-            <div className="flex items-baseline gap-1.5 mt-0.5">
-              <span className="text-xl sm:text-2xl font-bold text-slate-900">{taxGroups.length}</span>
-              <span className="text-xs text-slate-500">Total</span>
-            </div>
-          </div>
-          <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
-            <FolderTree className="w-4 h-4" />
-          </div>
-        </div>
-      </div>
-
       {/* Main Tax Group Form Card */}
       <TaxGroupForm
         onRecordSaved={handleRecordSaved}

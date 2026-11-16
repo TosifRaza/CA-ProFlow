@@ -136,40 +136,6 @@ const TaxDetailPage = () => {
         </div>
       </div>
 
-      {/* Hero Stats & KPI Cards */}
-      {/* Hero Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-xl">
-        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
-              Configured Tasks
-            </span>
-            <div className="flex items-baseline gap-1.5 mt-0.5">
-              <span className="text-xl sm:text-2xl font-bold text-slate-900">{taxDetails.length}</span>
-              <span className="text-xs text-slate-500">Tasks</span>
-            </div>
-          </div>
-          <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
-            <CalendarClock className="w-4 h-4" />
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
-              Covered Tax Names
-            </span>
-            <div className="flex items-baseline gap-1.5 mt-0.5">
-              <span className="text-xl sm:text-2xl font-bold text-slate-900">{distinctGroupsCount}</span>
-              <span className="text-xs text-slate-500">Taxes</span>
-            </div>
-          </div>
-          <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
-            <FolderTree className="w-4 h-4" />
-          </div>
-        </div>
-      </div>
-
       {/* Main Tax Master Form Card */}
       <TaxDetailForm
         onRecordSaved={handleRecordSaved}

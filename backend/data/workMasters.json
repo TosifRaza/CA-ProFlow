@@ -1,15 +1,5 @@
 [
   {
-    "id": 2,
-    "workName": "kkreradfds",
-    "taxGroup": "test1",
-    "taxGroupId": 4,
-    "typeOfWork": "test1",
-    "taxDetailId": 8,
-    "createdAt": "2026-11-16T08:33:11.169Z",
-    "updatedAt": "2026-11-16T08:33:11.169Z"
-  },
-  {
     "id": 1,
     "workName": "kkreradfds99",
     "taxGroup": "Tax Deducted at Source (TDS)",

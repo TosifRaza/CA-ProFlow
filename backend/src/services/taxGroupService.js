@@ -52,6 +52,114 @@ const notifyFallback = (error) => {
   }
 };
 
+const cascadeDeleteRelatedRecords = async (numericId, taxGroupName) => {
+  // 1. Prisma DB cleanup if reachable
+  if (dbStatus.shouldTryDb()) {
+    try {
+      await prisma.taxDetail.deleteMany({
+        where: {
+          OR: [{ taxGroupId: numericId }, { taxGroup: taxGroupName }],
+        },
+      });
+      await prisma.workMaster.deleteMany({
+        where: {
+          OR: [{ taxGroupId: numericId }, { taxGroup: taxGroupName }],
+        },
+      });
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  // 2. File fallback cleanup
+  try {
+    const detailsFile = path.join(DATA_DIR, 'taxDetails.json');
+    if (fs.existsSync(detailsFile)) {
+      const details = JSON.parse(fs.readFileSync(detailsFile, 'utf8'));
+      const remainingDetails = details.filter(
+        (d) => d.taxGroupId !== numericId && d.taxGroup !== taxGroupName
+      );
+      fs.writeFileSync(detailsFile, JSON.stringify(remainingDetails, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error cascading delete in taxDetails.json:', err);
+  }
+
+  try {
+    const workFile = path.join(DATA_DIR, 'workMasters.json');
+    if (fs.existsSync(workFile)) {
+      const works = JSON.parse(fs.readFileSync(workFile, 'utf8'));
+      const remainingWorks = works.filter(
+        (w) => w.taxGroupId !== numericId && w.taxGroup !== taxGroupName
+      );
+      fs.writeFileSync(workFile, JSON.stringify(remainingWorks, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error cascading delete in workMasters.json:', err);
+  }
+};
+
+const cascadeUpdateRelatedRecords = async (numericId, oldTaxGroupName, newTaxGroupName) => {
+  if (!oldTaxGroupName || oldTaxGroupName === newTaxGroupName) return;
+
+  if (dbStatus.shouldTryDb()) {
+    try {
+      await prisma.taxDetail.updateMany({
+        where: {
+          OR: [{ taxGroupId: numericId }, { taxGroup: oldTaxGroupName }],
+        },
+        data: {
+          taxGroup: newTaxGroupName,
+          taxGroupId: numericId,
+        },
+      });
+      await prisma.workMaster.updateMany({
+        where: {
+          OR: [{ taxGroupId: numericId }, { taxGroup: oldTaxGroupName }],
+        },
+        data: {
+          taxGroup: newTaxGroupName,
+          taxGroupId: numericId,
+        },
+      });
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  try {
+    const detailsFile = path.join(DATA_DIR, 'taxDetails.json');
+    if (fs.existsSync(detailsFile)) {
+      const details = JSON.parse(fs.readFileSync(detailsFile, 'utf8'));
+      const updatedDetails = details.map((d) => {
+        if (d.taxGroupId === numericId || d.taxGroup === oldTaxGroupName) {
+          return { ...d, taxGroup: newTaxGroupName, taxGroupId: numericId };
+        }
+        return d;
+      });
+      fs.writeFileSync(detailsFile, JSON.stringify(updatedDetails, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error cascading update in taxDetails.json:', err);
+  }
+
+  try {
+    const workFile = path.join(DATA_DIR, 'workMasters.json');
+    if (fs.existsSync(workFile)) {
+      const works = JSON.parse(fs.readFileSync(workFile, 'utf8'));
+      const updatedWorks = works.map((w) => {
+        if (w.taxGroupId === numericId || w.taxGroup === oldTaxGroupName) {
+          return { ...w, taxGroup: newTaxGroupName, taxGroupId: numericId };
+        }
+        return w;
+      });
+      fs.writeFileSync(workFile, JSON.stringify(updatedWorks, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error cascading update in workMasters.json:', err);
+  }
+};
+
 class TaxGroupService {
   async getAllTaxGroups() {
     if (!dbStatus.shouldTryDb()) {
@@ -183,21 +291,30 @@ class TaxGroupService {
         notFoundError.statusCode = 404;
         throw notFoundError;
       }
+      const oldTaxName = fallbackStore[index].taxName;
       fallbackStore[index] = {
         ...fallbackStore[index],
         ...updateData,
         updatedAt: new Date(),
       };
       saveStore(fallbackStore);
+      if (updateData.taxName && oldTaxName && oldTaxName !== updateData.taxName) {
+        await cascadeUpdateRelatedRecords(numericId, oldTaxName, updateData.taxName);
+      }
       return fallbackStore[index];
     }
 
     try {
+      const existing = await prisma.taxGroup.findUnique({ where: { id: numericId } });
+      const oldTaxName = existing ? existing.taxName : null;
       const updated = await prisma.taxGroup.update({
         where: { id: numericId },
         data: updateData,
       });
       dbStatus.markDbUp();
+      if (updateData.taxName && oldTaxName && oldTaxName !== updateData.taxName) {
+        await cascadeUpdateRelatedRecords(numericId, oldTaxName, updateData.taxName);
+      }
       return updated;
     } catch (error) {
       if (isDbConnectionError(error)) {
@@ -210,12 +327,16 @@ class TaxGroupService {
           notFoundError.statusCode = 404;
           throw notFoundError;
         }
+        const oldTaxName = fallbackStore[index].taxName;
         fallbackStore[index] = {
           ...fallbackStore[index],
           ...updateData,
           updatedAt: new Date(),
         };
         saveStore(fallbackStore);
+        if (updateData.taxName && oldTaxName && oldTaxName !== updateData.taxName) {
+          await cascadeUpdateRelatedRecords(numericId, oldTaxName, updateData.taxName);
+        }
         return fallbackStore[index];
       }
       if (error.code === 'P2025') {
@@ -235,6 +356,8 @@ class TaxGroupService {
       throw error;
     }
 
+    let targetTaxName = null;
+
     if (!dbStatus.shouldTryDb()) {
       fallbackStore = loadStore();
       const index = fallbackStore.findIndex((item) => item.id === numericId);
@@ -243,16 +366,21 @@ class TaxGroupService {
         notFoundError.statusCode = 404;
         throw notFoundError;
       }
+      targetTaxName = fallbackStore[index].taxName;
       const [deleted] = fallbackStore.splice(index, 1);
       saveStore(fallbackStore);
+      await cascadeDeleteRelatedRecords(numericId, targetTaxName);
       return deleted;
     }
 
     try {
+      const existing = await prisma.taxGroup.findUnique({ where: { id: numericId } });
+      if (existing) targetTaxName = existing.taxName;
       const deleted = await prisma.taxGroup.delete({
         where: { id: numericId },
       });
       dbStatus.markDbUp();
+      await cascadeDeleteRelatedRecords(numericId, targetTaxName);
       return deleted;
     } catch (error) {
       if (isDbConnectionError(error)) {
@@ -265,8 +393,10 @@ class TaxGroupService {
           notFoundError.statusCode = 404;
           throw notFoundError;
         }
+        targetTaxName = fallbackStore[index].taxName;
         const [deleted] = fallbackStore.splice(index, 1);
         saveStore(fallbackStore);
+        await cascadeDeleteRelatedRecords(numericId, targetTaxName);
         return deleted;
       }
       if (error.code === 'P2025') {

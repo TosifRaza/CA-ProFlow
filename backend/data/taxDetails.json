@@ -1,21 +1,5 @@
 [
   {
-    "id": 8,
-    "taxGroup": "test1",
-    "taxGroupId": 4,
-    "description": "test1",
-    "frequency": "Quarterly",
-    "dateFrom": "2026-11-18T00:00:00.000Z",
-    "dateTo": "2026-11-30T00:00:00.000Z",
-    "timeFrom": "",
-    "timeTo": "",
-    "submissionDate": "2026-12-04T00:00:00.000Z",
-    "reconciliationDate": "2026-12-06T00:00:00.000Z",
-    "extendDate": "2026-12-10T00:00:00.000Z",
-    "createdAt": "2026-11-16T08:32:32.536Z",
-    "updatedAt": "2026-11-16T08:32:32.536Z"
-  },
-  {
     "id": 7,
     "taxGroup": "Tax Deducted at Source (TDS)",
     "taxGroupId": 3,

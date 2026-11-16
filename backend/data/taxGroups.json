@@ -1,21 +1,5 @@
 [
   {
-    "id": 4,
-    "taxName": "test1",
-    "frequency": null,
-    "date": null,
-    "createdAt": "2026-11-16T08:30:37.952Z",
-    "updatedAt": "2026-11-16T08:30:37.952Z"
-  },
-  {
-    "id": 1,
-    "taxName": "Goods & Services Tax (GST)",
-    "frequency": null,
-    "date": null,
-    "createdAt": "2026-11-14T11:45:00.000Z",
-    "updatedAt": "2026-11-14T11:45:00.000Z"
-  },
-  {
     "id": 2,
     "taxName": "Direct Taxes & Income Tax",
     "frequency": null,

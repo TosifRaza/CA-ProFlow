@@ -52,6 +52,27 @@ const notifyFallback = (error) => {
   }
 };
 
+const cascadeDeleteWorkMasterForTaxDetail = async (numericId) => {
+  if (dbStatus.shouldTryDb()) {
+    try {
+      await prisma.workMaster.deleteMany({
+        where: { taxDetailId: numericId },
+      });
+    } catch (e) {}
+  }
+
+  try {
+    const workFile = path.join(DATA_DIR, 'workMasters.json');
+    if (fs.existsSync(workFile)) {
+      const works = JSON.parse(fs.readFileSync(workFile, 'utf8'));
+      const remainingWorks = works.filter((w) => w.taxDetailId !== numericId);
+      fs.writeFileSync(workFile, JSON.stringify(remainingWorks, null, 2), 'utf8');
+    }
+  } catch (err) {
+    console.error('Error cascading delete in workMasters.json for tax detail:', err);
+  }
+};
+
 class TaxDetailService {
   async getAllTaxDetails() {
     if (!dbStatus.shouldTryDb()) {
@@ -310,6 +331,7 @@ class TaxDetailService {
       }
       const [deleted] = fallbackStore.splice(index, 1);
       saveStore(fallbackStore);
+      await cascadeDeleteWorkMasterForTaxDetail(numericId);
       return deleted;
     }
 
@@ -318,6 +340,7 @@ class TaxDetailService {
         where: { id: numericId },
       });
       dbStatus.markDbUp();
+      await cascadeDeleteWorkMasterForTaxDetail(numericId);
       return deleted;
     } catch (error) {
       if (isDbConnectionError(error)) {
@@ -332,6 +355,7 @@ class TaxDetailService {
         }
         const [deleted] = fallbackStore.splice(index, 1);
         saveStore(fallbackStore);
+        await cascadeDeleteWorkMasterForTaxDetail(numericId);
         return deleted;
       }
       if (error.code === 'P2025') {

@@ -33,7 +33,9 @@ let hasLoggedDbFallback = false;
 const isDbConnectionError = (error) => {
   return (
     error &&
-    (error.code === 'P1001' ||
+    (error.name === 'PrismaClientInitializationError' ||
+      error.constructor?.name === 'PrismaClientInitializationError' ||
+      error.code === 'P1001' ||
       error.code === 'P1002' ||
       error.code === 'P1003' ||
       error.code === 'P1017' ||

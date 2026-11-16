@@ -9,6 +9,15 @@ const server = app.listen(PORT, () => {
   console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
 });
 
+// Prevent unhandled errors from terminating server
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
 // Graceful shutdown handling
 const shutdown = () => {
   console.log('Shutting down server gracefully...');

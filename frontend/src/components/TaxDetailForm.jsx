@@ -47,9 +47,11 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   const extendDateRef = useRef(null);
 
   // Fetch all saved Tax Groups
-  const fetchTaxGroups = async () => {
+  const fetchTaxGroups = async (isInitial = false) => {
     try {
-      setLoadingTaxGroups(true);
+      if (isInitial || savedTaxGroups.length === 0) {
+        setLoadingTaxGroups(true);
+      }
       const res = await taxGroupApi.getAll();
       if (res && res.data) {
         setSavedTaxGroups(res.data);
@@ -62,7 +64,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   };
 
   useEffect(() => {
-    fetchTaxGroups();
+    fetchTaxGroups(true);
   }, []);
 
   // When editingRecord changes, populate the form
@@ -90,6 +92,24 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   }, [editingRecord]);
 
   const handleTaxGroupChange = (taxName) => {
+    if (!taxName) {
+      setFormData({
+        taxGroup: '',
+        taxGroupId: null,
+        description: '',
+        frequency: '',
+        dateFrom: '',
+        dateTo: '',
+        submissionDate: '',
+        reconciliationDate: '',
+        extendDate: '',
+      });
+      setErrors({});
+      if (feedback.message) {
+        setFeedback({ type: '', message: '' });
+      }
+      return;
+    }
     const matched = savedTaxGroups.find((tg) => tg.taxName === taxName);
     setFormData((prev) => ({
       ...prev,
@@ -182,16 +202,9 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
           type: 'success',
           message: res.message || 'Tax Master details updated successfully!',
         });
-        if (onRecordSaved) onRecordSaved(res.data, 'update');
-      } else {
-        const res = await taxDetailApi.create(formData);
-        setFeedback({
-          type: 'success',
-          message: res.message || 'Tax Master details saved successfully!',
-        });
-        // Keep taxGroup selected so user can quickly add another task under it if desired
-        setFormData((prev) => ({
-          ...prev,
+        setFormData({
+          taxGroup: '',
+          taxGroupId: null,
           description: '',
           frequency: '',
           dateFrom: '',
@@ -199,7 +212,26 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
           submissionDate: '',
           reconciliationDate: '',
           extendDate: '',
-        }));
+        });
+        if (onRecordSaved) onRecordSaved(res.data, 'update');
+      } else {
+        const res = await taxDetailApi.create(formData);
+        setFeedback({
+          type: 'success',
+          message: res.message || 'Tax Master details saved successfully!',
+        });
+        // Automatically reset to "Select a Tax" so that details form closes
+        setFormData({
+          taxGroup: '',
+          taxGroupId: null,
+          description: '',
+          frequency: '',
+          dateFrom: '',
+          dateTo: '',
+          submissionDate: '',
+          reconciliationDate: '',
+          extendDate: '',
+        });
         if (onRecordSaved) onRecordSaved(res.data, 'create');
       }
 
@@ -318,23 +350,17 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                 <select
                   id="taxGroup"
                   value={formData.taxGroup}
-                  onFocus={fetchTaxGroups}
+                  onFocus={() => fetchTaxGroups(false)}
                   onChange={(e) => handleTaxGroupChange(e.target.value)}
                   className={`w-full px-4 py-2.5 text-sm rounded-xl border bg-white appearance-none transition-all focus:outline-none focus:ring-2 cursor-pointer ${
-                    !formData.taxGroup ? 'text-slate-400' : 'text-slate-900 font-bold'
+                    !formData.taxGroup ? 'text-slate-400 font-medium' : 'text-slate-900 font-bold'
                   } ${
                     errors.taxGroup
                       ? 'border-rose-400 focus:ring-rose-100 focus:border-rose-500'
                       : 'border-slate-300 focus:ring-blue-100 focus:border-[#0066f5]'
                   }`}
                 >
-                  <option value="" disabled>
-                    {loadingTaxGroups
-                      ? 'Loading Saved Tax Groups...'
-                      : savedTaxGroups.length === 0
-                      ? 'No Tax Groups found (Please add in Tax Group master first)'
-                      : 'Select a Tax'}
-                  </option>
+                  <option value="">Select a Tax</option>
                   {savedTaxGroups.map((tg) => (
                     <option key={tg.id} value={tg.taxName} className="text-slate-900 font-semibold py-1">
                       {tg.taxName}

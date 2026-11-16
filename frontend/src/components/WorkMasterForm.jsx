@@ -35,9 +35,11 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   const [feedback, setFeedback] = useState({ type: '', message: '' });
 
   // Fetch all saved Tax Groups
-  const fetchTaxGroups = async () => {
+  const fetchTaxGroups = async (isInitial = false) => {
     try {
-      setLoadingTaxGroups(true);
+      if (isInitial || savedTaxGroups.length === 0) {
+        setLoadingTaxGroups(true);
+      }
       const res = await taxGroupApi.getAll();
       if (res && res.data) {
         setSavedTaxGroups(res.data);
@@ -50,9 +52,11 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   };
 
   // Fetch all saved Tax Masters to populate Type of Work options
-  const fetchTaxMasters = async () => {
+  const fetchTaxMasters = async (isInitial = false) => {
     try {
-      setLoadingTaxMasters(true);
+      if (isInitial || savedTaxMasters.length === 0) {
+        setLoadingTaxMasters(true);
+      }
       const res = await taxDetailApi.getAll();
       if (res && res.data) {
         setSavedTaxMasters(res.data);
@@ -65,8 +69,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   };
 
   useEffect(() => {
-    fetchTaxGroups();
-    fetchTaxMasters();
+    fetchTaxGroups(true);
+    fetchTaxMasters(true);
   }, []);
 
   // When editingRecord changes, populate the form
@@ -351,7 +355,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                 <select
                   id="taxGroup"
                   value={formData.taxGroup}
-                  onFocus={fetchTaxGroups}
+                  onFocus={() => fetchTaxGroups(false)}
                   onChange={handleTaxGroupChange}
                   className={`w-full px-4 py-2.5 text-sm rounded-xl border bg-white appearance-none transition-all focus:outline-none focus:ring-2 cursor-pointer ${
                     !formData.taxGroup ? 'text-slate-400' : 'text-slate-800 font-medium'
@@ -361,13 +365,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                       : 'border-slate-200/90 focus:ring-blue-100 focus:border-[#0066f5]'
                   }`}
                 >
-                  <option value="" disabled>
-                    {loadingTaxGroups
-                      ? 'Loading Saved Tax Groups...'
-                      : savedTaxGroups.length === 0
-                      ? 'No Tax Groups found (Please create in Tax Group first)'
-                      : 'Select Tax Group'}
-                  </option>
+                  <option value="">Select Tax Group</option>
 
                   {/* ONLY Saved Tax Groups are shown */}
                   {savedTaxGroups.map((group) => (
@@ -399,7 +397,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                 <select
                   id="typeOfWork"
                   value={formData.typeOfWork}
-                  onFocus={fetchTaxMasters}
+                  onFocus={() => fetchTaxMasters(false)}
                   onChange={handleTypeOfWorkChange}
                   className={`w-full px-4 py-2.5 text-sm rounded-xl border bg-white appearance-none transition-all focus:outline-none focus:ring-2 cursor-pointer ${
                     !formData.typeOfWork ? 'text-slate-400' : 'text-slate-800 font-medium'
@@ -409,13 +407,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                       : 'border-slate-200/90 focus:ring-blue-100 focus:border-[#0066f5]'
                   }`}
                 >
-                  <option value="" disabled>
-                    {loadingTaxMasters
-                      ? 'Loading Saved Tax Masters...'
-                      : savedTaxMasters.length === 0
-                      ? 'No Tax Masters found (Please create in Tax Master first)'
-                      : 'Select from Saved Tax Masters'}
-                  </option>
+                  <option value="">Select from Saved Tax Masters</option>
 
                   {/* ONLY Saved Tax Masters are shown */}
                   {savedTaxMasters.map((tax) => (

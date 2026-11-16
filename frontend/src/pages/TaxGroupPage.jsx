@@ -184,6 +184,7 @@ const TaxGroupPage = () => {
             <table className="w-full text-left text-xs sm:text-sm text-slate-700">
               <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
+                  <th scope="col" className="w-12 px-4 py-3 text-center whitespace-nowrap">S.No.</th>
                   <th scope="col" className="px-5 py-3">Tax Group Name</th>
                   <th scope="col" className="px-5 py-3">Classification Scope</th>
                   <th scope="col" className="px-5 py-3">Status</th>
@@ -192,8 +193,13 @@ const TaxGroupPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredTaxGroups.map((group) => (
+                {filteredTaxGroups.map((group, index) => (
                   <tr key={group.id} className="hover:bg-slate-50/70 transition-colors group">
+                    {/* S.No. */}
+                    <td className="w-12 px-4 py-3 text-center font-medium text-slate-500 text-xs whitespace-nowrap">
+                      {index + 1}
+                    </td>
+
                     {/* Tax Group Name */}
                     <td className="px-5 py-3 font-semibold text-slate-900">
                       {group.taxName}

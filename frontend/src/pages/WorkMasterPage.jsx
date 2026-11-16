@@ -233,6 +233,7 @@ const WorkMasterPage = () => {
             <table className="w-full text-left text-xs sm:text-sm text-slate-700">
               <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
+                  <th scope="col" className="w-12 px-4 py-3 text-center whitespace-nowrap">S.No.</th>
                   <th scope="col" className="px-5 py-3">Work Name</th>
                   <th scope="col" className="px-5 py-3">Tax Name</th>
                   <th scope="col" className="px-5 py-3">Compliance Schedule</th>
@@ -241,11 +242,16 @@ const WorkMasterPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredWorkMasters.map((work) => {
+                {filteredWorkMasters.map((work, index) => {
                   const matchedTax = findMatchingTax(work);
 
                   return (
                     <tr key={work.id} className="hover:bg-slate-50/70 transition-colors group">
+                      {/* S.No. */}
+                      <td className="w-12 px-4 py-3 text-center font-medium text-slate-500 text-xs whitespace-nowrap">
+                        {index + 1}
+                      </td>
+
                       {/* Work Name */}
                       <td className="px-5 py-3 font-semibold text-slate-900">
                         {work.workName}

@@ -186,7 +186,6 @@ const TaxGroupPage = () => {
                 <tr>
                   <th scope="col" className="w-12 px-4 py-3 text-center whitespace-nowrap">S.No.</th>
                   <th scope="col" className="px-5 py-3">Tax Group Name</th>
-                  <th scope="col" className="px-5 py-3">Classification Scope</th>
                   <th scope="col" className="px-5 py-3">Status</th>
                   <th scope="col" className="px-5 py-3">Created Date</th>
                   <th scope="col" className="px-5 py-3 text-right">Actions</th>
@@ -203,13 +202,6 @@ const TaxGroupPage = () => {
                     {/* Tax Group Name */}
                     <td className="px-5 py-3 font-semibold text-slate-900">
                       {group.taxName}
-                    </td>
-
-                    {/* Scope */}
-                    <td className="px-5 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                        Statutory Tax
-                      </span>
                     </td>
 
                     {/* Status */}

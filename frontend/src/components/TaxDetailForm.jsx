@@ -126,9 +126,53 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: '' }));
-    }
+
+    setErrors((prev) => {
+      const nextErrors = { ...prev, [field]: '' };
+
+      // Real-time date relationship validations
+      if (field === 'dateFrom' && value && formData.dateTo) {
+        if (new Date(formData.dateTo) < new Date(value)) {
+          nextErrors.dateTo = 'Period To date must be on or after Period From date';
+        } else {
+          nextErrors.dateTo = '';
+        }
+      }
+
+      if (field === 'dateTo' && value && formData.dateFrom) {
+        if (new Date(value) < new Date(formData.dateFrom)) {
+          nextErrors.dateTo = 'Period To date must be on or after Period From date';
+        } else {
+          nextErrors.dateTo = '';
+        }
+      }
+
+      if (field === 'submissionDate' && value) {
+        if (formData.dateTo && new Date(value) < new Date(formData.dateTo)) {
+          nextErrors.submissionDate = 'Submission Date must be on or after Period To date';
+        } else {
+          nextErrors.submissionDate = '';
+        }
+        if (formData.extendDate && new Date(formData.extendDate) < new Date(value)) {
+          nextErrors.extendDate = 'Extend Date must be on or after Submission Date';
+        } else if (formData.extendDate && (!formData.dateTo || new Date(formData.extendDate) >= new Date(formData.dateTo))) {
+          nextErrors.extendDate = '';
+        }
+      }
+
+      if (field === 'extendDate' && value) {
+        if (formData.submissionDate && new Date(value) < new Date(formData.submissionDate)) {
+          nextErrors.extendDate = 'Extend Date must be on or after Submission Date';
+        } else if (formData.dateTo && new Date(value) < new Date(formData.dateTo)) {
+          nextErrors.extendDate = 'Extend Date must be on or after Period To date';
+        } else {
+          nextErrors.extendDate = '';
+        }
+      }
+
+      return nextErrors;
+    });
+
     if (feedback.message) {
       setFeedback({ type: '', message: '' });
     }
@@ -161,24 +205,34 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
       newErrors.dateTo = 'To Date is required';
     } else if (isNaN(new Date(formData.dateTo).getTime())) {
       newErrors.dateTo = 'Invalid To Date';
+    } else if (formData.dateFrom && new Date(formData.dateTo) < new Date(formData.dateFrom)) {
+      newErrors.dateTo = 'Period To date must be on or after Period From date';
     }
 
     if (!formData.submissionDate) {
       newErrors.submissionDate = 'Submission Date is required';
     } else if (isNaN(new Date(formData.submissionDate).getTime())) {
       newErrors.submissionDate = 'Invalid Submission Date';
+    } else if (formData.dateTo && new Date(formData.submissionDate) < new Date(formData.dateTo)) {
+      newErrors.submissionDate = 'Submission Date must be on or after Period To date';
     }
 
     if (!formData.reconciliationDate) {
       newErrors.reconciliationDate = 'Reconciliation Date is required';
     } else if (isNaN(new Date(formData.reconciliationDate).getTime())) {
       newErrors.reconciliationDate = 'Invalid Reconciliation Date';
+    } else if (formData.dateTo && new Date(formData.reconciliationDate) < new Date(formData.dateTo)) {
+      newErrors.reconciliationDate = 'Reconciliation Date must be on or after Period To date';
     }
 
     if (!formData.extendDate) {
       newErrors.extendDate = 'Extend Date is required';
     } else if (isNaN(new Date(formData.extendDate).getTime())) {
       newErrors.extendDate = 'Invalid Extend Date';
+    } else if (formData.submissionDate && new Date(formData.extendDate) < new Date(formData.submissionDate)) {
+      newErrors.extendDate = 'Extend Date must be on or after Submission Date';
+    } else if (formData.dateTo && new Date(formData.extendDate) < new Date(formData.dateTo)) {
+      newErrors.extendDate = 'Extend Date must be on or after Period To date';
     }
 
     setErrors(newErrors);
@@ -509,6 +563,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                         ref={dateToRef}
                         type="date"
                         id="dateTo"
+                        min={formData.dateFrom || undefined}
                         value={formData.dateTo}
                         onChange={(e) => handleInputChange('dateTo', e.target.value)}
                         className={`w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border bg-white transition-all focus:outline-none focus:ring-2 cursor-pointer ${
@@ -547,6 +602,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                         ref={submissionDateRef}
                         type="date"
                         id="submissionDate"
+                        min={formData.dateTo || formData.dateFrom || undefined}
                         value={formData.submissionDate}
                         onChange={(e) => handleInputChange('submissionDate', e.target.value)}
                         className={`w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border bg-white transition-all focus:outline-none focus:ring-2 cursor-pointer ${
@@ -585,6 +641,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                         ref={reconciliationDateRef}
                         type="date"
                         id="reconciliationDate"
+                        min={formData.dateTo || formData.dateFrom || undefined}
                         value={formData.reconciliationDate}
                         onChange={(e) => handleInputChange('reconciliationDate', e.target.value)}
                         className={`w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border bg-white transition-all focus:outline-none focus:ring-2 cursor-pointer ${
@@ -623,6 +680,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                         ref={extendDateRef}
                         type="date"
                         id="extendDate"
+                        min={formData.submissionDate || formData.dateTo || formData.dateFrom || undefined}
                         value={formData.extendDate}
                         onChange={(e) => handleInputChange('extendDate', e.target.value)}
                         className={`w-full h-10 pl-3.5 pr-10 text-sm rounded-lg border bg-white transition-all focus:outline-none focus:ring-2 cursor-pointer ${

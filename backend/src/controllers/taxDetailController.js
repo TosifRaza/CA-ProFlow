@@ -32,6 +32,8 @@ const validateTaxDetailInput = (data) => {
     errors.push('To Date is required');
   } else if (isNaN(new Date(dateTo).getTime())) {
     errors.push('To Date must be a valid date');
+  } else if (dateFrom && !isNaN(new Date(dateFrom).getTime()) && new Date(dateTo) < new Date(dateFrom)) {
+    errors.push('Period To date must be on or after Period From date');
   }
 
   if (!submissionDate) {
@@ -40,6 +42,8 @@ const validateTaxDetailInput = (data) => {
     const parsed = new Date(submissionDate);
     if (isNaN(parsed.getTime())) {
       errors.push('Submission Date must be a valid date');
+    } else if (dateTo && !isNaN(new Date(dateTo).getTime()) && parsed < new Date(dateTo)) {
+      errors.push('Submission Date must be on or after Period To date');
     }
   }
 
@@ -58,6 +62,10 @@ const validateTaxDetailInput = (data) => {
     const parsed = new Date(extendDate);
     if (isNaN(parsed.getTime())) {
       errors.push('Extend Date must be a valid date');
+    } else if (submissionDate && !isNaN(new Date(submissionDate).getTime()) && parsed < new Date(submissionDate)) {
+      errors.push('Extend Date must be on or after Submission Date');
+    } else if (dateTo && !isNaN(new Date(dateTo).getTime()) && parsed < new Date(dateTo)) {
+      errors.push('Extend Date must be on or after Period To date');
     }
   }
 
@@ -156,6 +164,18 @@ const updateTaxDetail = async (req, res, next) => {
     }
     if (extendDate && isNaN(new Date(extendDate).getTime())) {
       validationErrors.push('Extend Date must be a valid date');
+    }
+
+    if (dateFrom && dateTo && new Date(dateTo) < new Date(dateFrom)) {
+      validationErrors.push('Period To date must be on or after Period From date');
+    }
+    if (submissionDate && dateTo && new Date(submissionDate) < new Date(dateTo)) {
+      validationErrors.push('Submission Date must be on or after Period To date');
+    }
+    if (extendDate && submissionDate && new Date(extendDate) < new Date(submissionDate)) {
+      validationErrors.push('Extend Date must be on or after Submission Date');
+    } else if (extendDate && dateTo && new Date(extendDate) < new Date(dateTo)) {
+      validationErrors.push('Extend Date must be on or after Period To date');
     }
 
     if (validationErrors.length > 0) {

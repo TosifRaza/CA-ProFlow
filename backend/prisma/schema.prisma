@@ -18,6 +18,8 @@ model TaxGroup {
 
 model TaxDetail {
   id                 Int       @id @default(autoincrement())
+  taxGroup           String?
+  taxGroupId         Int?
   description        String
   frequency          String?
   dateFrom           DateTime?

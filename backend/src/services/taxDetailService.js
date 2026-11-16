@@ -94,6 +94,8 @@ class TaxDetailService {
 
   async createTaxDetail(data) {
     const {
+      taxGroup,
+      taxGroupId,
       description,
       frequency,
       dateFrom,
@@ -114,6 +116,8 @@ class TaxDetailService {
     try {
       const created = await prisma.taxDetail.create({
         data: {
+          taxGroup: taxGroup ? taxGroup.trim() : null,
+          taxGroupId: taxGroupId ? parseInt(taxGroupId, 10) : null,
           description: description.trim(),
           frequency: frequency ? frequency.trim() : null,
           dateFrom: parsedDateFrom,
@@ -134,6 +138,8 @@ class TaxDetailService {
         const now = new Date();
         const record = {
           id: maxId + 1,
+          taxGroup: taxGroup ? taxGroup.trim() : null,
+          taxGroupId: taxGroupId ? parseInt(taxGroupId, 10) : null,
           description: description.trim(),
           frequency: frequency ? frequency.trim() : null,
           dateFrom: parsedDateFrom,
@@ -163,6 +169,8 @@ class TaxDetailService {
     }
 
     const {
+      taxGroup,
+      taxGroupId,
       description,
       frequency,
       dateFrom,
@@ -175,6 +183,10 @@ class TaxDetailService {
     } = data;
 
     const updateData = {};
+    if (taxGroup !== undefined) updateData.taxGroup = taxGroup ? taxGroup.trim() : null;
+    if (taxGroupId !== undefined) {
+      updateData.taxGroupId = taxGroupId ? parseInt(taxGroupId, 10) : null;
+    }
     if (description !== undefined) updateData.description = description.trim();
     if (frequency !== undefined) updateData.frequency = frequency ? frequency.trim() : null;
     if (dateFrom !== undefined) updateData.dateFrom = dateFrom ? new Date(dateFrom) : null;

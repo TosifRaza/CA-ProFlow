@@ -15,6 +15,8 @@ import {
   FileCheck,
   CheckCircle2,
   Clock,
+  FolderTree,
+  Layers,
 } from 'lucide-react';
 
 const TaxDetailPage = () => {
@@ -93,9 +95,11 @@ const TaxDetailPage = () => {
   // Filtered Tax Masters based on search input
   const filteredTaxDetails = useMemo(() => {
     if (!searchFilter.trim()) return taxDetails;
+    const q = searchFilter.toLowerCase().trim();
     return taxDetails.filter((t) =>
-      t.description.toLowerCase().includes(searchFilter.toLowerCase().trim()) ||
-      (t.frequency && t.frequency.toLowerCase().includes(searchFilter.toLowerCase().trim()))
+      t.description.toLowerCase().includes(q) ||
+      (t.taxGroup && t.taxGroup.toLowerCase().includes(q)) ||
+      (t.frequency && t.frequency.toLowerCase().includes(q))
     );
   }, [taxDetails, searchFilter]);
 
@@ -118,7 +122,7 @@ const TaxDetailPage = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Configure filing periods, submission target dates, and extended deadlines for tax regimes.
+            Configure filing periods, submission target dates, and extended deadlines under each Tax Group.
           </p>
         </div>
 
@@ -212,7 +216,7 @@ const TaxDetailPage = () => {
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Filter tax tasks..."
+              placeholder="Filter by task or tax group..."
               className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-2xs"
             />
           </div>
@@ -244,6 +248,7 @@ const TaxDetailPage = () => {
             <table className="w-full text-left text-xs sm:text-sm text-slate-700">
               <thead className="bg-[#f8fafc] text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
                 <tr>
+                  <th scope="col" className="px-5 py-3.5">Tax Group</th>
                   <th scope="col" className="px-5 py-3.5">Task Description</th>
                   <th scope="col" className="px-5 py-3.5">Frequency</th>
                   <th scope="col" className="px-5 py-3.5">Date (From - To)</th>
@@ -256,49 +261,74 @@ const TaxDetailPage = () => {
               <tbody className="divide-y divide-slate-100">
                 {filteredTaxDetails.map((tax) => (
                   <tr key={tax.id} className="hover:bg-blue-50/25 transition-colors group">
+                    {/* Tax Group Badge */}
+                    <td className="px-5 py-4">
+                      {tax.taxGroup ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                          <FolderTree className="w-3.5 h-3.5 text-indigo-500" />
+                          <span>{tax.taxGroup}</span>
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 text-xs italic">—</span>
+                      )}
+                    </td>
+
+                    {/* Task Description */}
                     <td className="px-5 py-4 font-bold text-slate-900">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-200/60">
                           <CalendarClock className="w-3.5 h-3.5" />
                         </div>
-                        <span className="truncate max-w-[220px]" title={tax.description}>
+                        <span className="truncate max-w-[200px]" title={tax.description}>
                           {tax.description}
                         </span>
                       </div>
                     </td>
+
+                    {/* Frequency */}
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
                         {tax.frequency || 'Monthly'}
                       </span>
                     </td>
+
+                    {/* Date (From - To) */}
                     <td className="px-5 py-4 text-slate-600">
                       <div className="flex items-center gap-1.5 text-xs font-medium">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" />
                         <span>{formatDate(tax.dateFrom)} – {formatDate(tax.dateTo)}</span>
                       </div>
                     </td>
+
+                    {/* Submission Date */}
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/70">
                         {formatDate(tax.submissionDate)}
                       </span>
                     </td>
+
+                    {/* Reconciliation Date */}
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/70">
                         {formatDate(tax.reconciliationDate)}
                       </span>
                     </td>
+
+                    {/* Extend Date */}
                     <td className="px-5 py-4">
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/70">
                         {formatDate(tax.extendDate)}
                       </span>
                     </td>
+
+                    {/* Actions */}
                     <td className="px-5 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           type="button"
                           onClick={() => handleEdit(tax)}
                           className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-blue-200"
-                          title="Edit Tax Master"
+                          title="Edit Tax Master Task"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -307,7 +337,7 @@ const TaxDetailPage = () => {
                           onClick={() => handleDelete(tax.id)}
                           disabled={deleteId === tax.id}
                           className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50 border border-transparent hover:border-rose-200"
-                          title="Delete Tax Master"
+                          title="Delete Tax Master Task"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>

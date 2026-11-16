@@ -154,6 +154,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
         ...prev,
         typeOfWork: matchingTax.description,
         taxDetailId: matchingTax.id,
+        taxGroup: prev.taxGroup || matchingTax.taxGroup || '',
+        taxGroupId: prev.taxGroupId || matchingTax.taxGroupId || null,
       }));
       // Fetch full details of that tax master
       fetchTaxDetailById(matchingTax.id);
@@ -418,7 +420,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                   {/* ONLY Saved Tax Masters are shown */}
                   {savedTaxMasters.map((tax) => (
                     <option key={tax.id} value={tax.description}>
-                      {tax.description}
+                      {tax.description} {tax.taxGroup ? `(${tax.taxGroup})` : ''}
                     </option>
                   ))}
                 </select>

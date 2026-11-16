@@ -52,17 +52,8 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Right: Status Pill, Notifications & Firm Profile */}
+      {/* Right: Notifications */}
       <div className="flex items-center gap-3">
-        {/* Live Status Indicator */}
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50/80 border border-emerald-200/60 rounded-full text-[11px] font-semibold text-emerald-700">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>System Synced</span>
-        </div>
-
         {/* Notification Bell */}
         <button
           type="button"

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const prisma = require('../lib/prisma');
+const dbStatus = require('../lib/dbStatus');
 
 const DATA_DIR = path.join(__dirname, '../../data');
 const DATA_FILE = path.join(DATA_DIR, 'workMasters.json');
@@ -38,7 +39,7 @@ const isDbConnectionError = (error) => {
       error.code === 'P1017' ||
       error.code === 'P2021' ||
       error.message?.includes('connect ECONNREFUSED') ||
-      error.message?.includes('Can\'t reach database server'))
+      error.message?.includes("Can't reach database server"))
   );
 };
 
@@ -53,13 +54,20 @@ const notifyFallback = (error) => {
 
 class WorkMasterService {
   async getAllWorkMasters() {
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      return [...fallbackStore].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
     try {
       const records = await prisma.workMaster.findMany({
         orderBy: { createdAt: 'desc' },
       });
+      dbStatus.markDbUp();
       return records;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         return [...fallbackStore].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -76,13 +84,21 @@ class WorkMasterService {
       throw error;
     }
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const found = fallbackStore.find((item) => item.id === numericId);
+      return found || null;
+    }
+
     try {
       const record = await prisma.workMaster.findUnique({
         where: { id: numericId },
       });
+      dbStatus.markDbUp();
       return record;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const found = fallbackStore.find((item) => item.id === numericId);
@@ -95,6 +111,25 @@ class WorkMasterService {
   async createWorkMaster(data) {
     const { workName, taxGroup, taxGroupId, typeOfWork, taxDetailId } = data;
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const maxId = fallbackStore.reduce((max, item) => Math.max(max, item.id || 0), 0);
+      const now = new Date();
+      const record = {
+        id: maxId + 1,
+        workName: workName.trim(),
+        taxGroup: taxGroup ? taxGroup.trim() : null,
+        taxGroupId: taxGroupId ? parseInt(taxGroupId, 10) : null,
+        typeOfWork: typeOfWork.trim(),
+        taxDetailId: taxDetailId ? parseInt(taxDetailId, 10) : null,
+        createdAt: now,
+        updatedAt: now,
+      };
+      fallbackStore.unshift(record);
+      saveStore(fallbackStore);
+      return record;
+    }
+
     try {
       const created = await prisma.workMaster.create({
         data: {
@@ -105,9 +140,11 @@ class WorkMasterService {
           taxDetailId: taxDetailId ? parseInt(taxDetailId, 10) : null,
         },
       });
+      dbStatus.markDbUp();
       return created;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const maxId = fallbackStore.reduce((max, item) => Math.max(max, item.id || 0), 0);
@@ -150,14 +187,33 @@ class WorkMasterService {
       updateData.taxDetailId = taxDetailId ? parseInt(taxDetailId, 10) : null;
     }
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const index = fallbackStore.findIndex((item) => item.id === numericId);
+      if (index === -1) {
+        const notFoundError = new Error(`Work Master with ID ${numericId} not found`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      fallbackStore[index] = {
+        ...fallbackStore[index],
+        ...updateData,
+        updatedAt: new Date(),
+      };
+      saveStore(fallbackStore);
+      return fallbackStore[index];
+    }
+
     try {
       const updated = await prisma.workMaster.update({
         where: { id: numericId },
         data: updateData,
       });
+      dbStatus.markDbUp();
       return updated;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const index = fallbackStore.findIndex((item) => item.id === numericId);
@@ -191,13 +247,28 @@ class WorkMasterService {
       throw error;
     }
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const index = fallbackStore.findIndex((item) => item.id === numericId);
+      if (index === -1) {
+        const notFoundError = new Error(`Work Master with ID ${numericId} not found`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      const [deleted] = fallbackStore.splice(index, 1);
+      saveStore(fallbackStore);
+      return deleted;
+    }
+
     try {
       const deleted = await prisma.workMaster.delete({
         where: { id: numericId },
       });
+      dbStatus.markDbUp();
       return deleted;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const index = fallbackStore.findIndex((item) => item.id === numericId);

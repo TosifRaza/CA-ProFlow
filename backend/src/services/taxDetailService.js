@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const prisma = require('../lib/prisma');
+const dbStatus = require('../lib/dbStatus');
 
 const DATA_DIR = path.join(__dirname, '../../data');
 const DATA_FILE = path.join(DATA_DIR, 'taxDetails.json');
@@ -38,7 +39,7 @@ const isDbConnectionError = (error) => {
       error.code === 'P1017' ||
       error.code === 'P2021' ||
       error.message?.includes('connect ECONNREFUSED') ||
-      error.message?.includes('Can\'t reach database server'))
+      error.message?.includes("Can't reach database server"))
   );
 };
 
@@ -53,13 +54,20 @@ const notifyFallback = (error) => {
 
 class TaxDetailService {
   async getAllTaxDetails() {
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      return [...fallbackStore].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
     try {
       const records = await prisma.taxDetail.findMany({
         orderBy: { createdAt: 'desc' },
       });
+      dbStatus.markDbUp();
       return records;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         return [...fallbackStore].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -76,13 +84,21 @@ class TaxDetailService {
       throw error;
     }
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const found = fallbackStore.find((item) => item.id === numericId);
+      return found || null;
+    }
+
     try {
       const record = await prisma.taxDetail.findUnique({
         where: { id: numericId },
       });
+      dbStatus.markDbUp();
       return record;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const found = fallbackStore.find((item) => item.id === numericId);
@@ -113,6 +129,31 @@ class TaxDetailService {
     const parsedReconciliationDate = new Date(reconciliationDate);
     const parsedExtendDate = new Date(extendDate);
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const maxId = fallbackStore.reduce((max, item) => Math.max(max, item.id || 0), 0);
+      const now = new Date();
+      const record = {
+        id: maxId + 1,
+        taxGroup: taxGroup ? taxGroup.trim() : null,
+        taxGroupId: taxGroupId ? parseInt(taxGroupId, 10) : null,
+        description: description.trim(),
+        frequency: frequency ? frequency.trim() : null,
+        dateFrom: parsedDateFrom,
+        dateTo: parsedDateTo,
+        timeFrom: (timeFrom || '').trim(),
+        timeTo: (timeTo || '').trim(),
+        submissionDate: parsedSubmissionDate,
+        reconciliationDate: parsedReconciliationDate,
+        extendDate: parsedExtendDate,
+        createdAt: now,
+        updatedAt: now,
+      };
+      fallbackStore.unshift(record);
+      saveStore(fallbackStore);
+      return record;
+    }
+
     try {
       const created = await prisma.taxDetail.create({
         data: {
@@ -129,9 +170,11 @@ class TaxDetailService {
           extendDate: parsedExtendDate,
         },
       });
+      dbStatus.markDbUp();
       return created;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const maxId = fallbackStore.reduce((max, item) => Math.max(max, item.id || 0), 0);
@@ -197,14 +240,33 @@ class TaxDetailService {
     if (reconciliationDate !== undefined) updateData.reconciliationDate = new Date(reconciliationDate);
     if (extendDate !== undefined) updateData.extendDate = new Date(extendDate);
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const index = fallbackStore.findIndex((item) => item.id === numericId);
+      if (index === -1) {
+        const notFoundError = new Error(`Tax Detail with ID ${numericId} not found`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      fallbackStore[index] = {
+        ...fallbackStore[index],
+        ...updateData,
+        updatedAt: new Date(),
+      };
+      saveStore(fallbackStore);
+      return fallbackStore[index];
+    }
+
     try {
       const updated = await prisma.taxDetail.update({
         where: { id: numericId },
         data: updateData,
       });
+      dbStatus.markDbUp();
       return updated;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const index = fallbackStore.findIndex((item) => item.id === numericId);
@@ -238,13 +300,28 @@ class TaxDetailService {
       throw error;
     }
 
+    if (!dbStatus.shouldTryDb()) {
+      fallbackStore = loadStore();
+      const index = fallbackStore.findIndex((item) => item.id === numericId);
+      if (index === -1) {
+        const notFoundError = new Error(`Tax Detail with ID ${numericId} not found`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      const [deleted] = fallbackStore.splice(index, 1);
+      saveStore(fallbackStore);
+      return deleted;
+    }
+
     try {
       const deleted = await prisma.taxDetail.delete({
         where: { id: numericId },
       });
+      dbStatus.markDbUp();
       return deleted;
     } catch (error) {
       if (isDbConnectionError(error)) {
+        dbStatus.markDbDown();
         notifyFallback(error);
         fallbackStore = loadStore();
         const index = fallbackStore.findIndex((item) => item.id === numericId);

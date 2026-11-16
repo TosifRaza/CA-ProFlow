@@ -154,9 +154,6 @@ const WorkMasterPage = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Work Master</h1>
-            <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-              Work Workflows
-            </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
             Allocate work items and map client jobs to statutory Tax Groups and compliance schedules.

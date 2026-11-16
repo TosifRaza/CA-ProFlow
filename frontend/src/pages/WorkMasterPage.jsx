@@ -127,7 +127,9 @@ const WorkMasterPage = () => {
       if (byId) return byId;
     }
     return allTaxMasters.find(
-      (t) => t.description.toLowerCase() === (work.typeOfWork || '').toLowerCase()
+      (t) =>
+        (t.taxGroup && t.taxGroup.toLowerCase() === (work.taxGroup || work.typeOfWork || '').toLowerCase()) ||
+        t.description.toLowerCase() === (work.typeOfWork || '').toLowerCase()
     );
   };
 
@@ -278,7 +280,7 @@ const WorkMasterPage = () => {
                 <tr>
                   <th scope="col" className="px-5 py-3">Work Name</th>
                   <th scope="col" className="px-5 py-3">Tax Name</th>
-                  <th scope="col" className="px-5 py-3">Type of Work / Linked Tax</th>
+                  <th scope="col" className="px-5 py-3">Compliance Schedule</th>
                   <th scope="col" className="px-5 py-3">Created Date</th>
                   <th scope="col" className="px-5 py-3 text-right">Actions</th>
                 </tr>
@@ -294,19 +296,19 @@ const WorkMasterPage = () => {
                         {work.workName}
                       </td>
 
-                      {/* Tax Group Badge */}
+                      {/* Tax Name Badge */}
                       <td className="px-5 py-3 whitespace-nowrap">
-                        {work.taxGroup ? (
+                        {work.taxGroup || work.typeOfWork ? (
                           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
                             <Layers className="w-3 h-3 text-slate-500" />
-                            {work.taxGroup}
+                            {work.taxGroup || work.typeOfWork}
                           </span>
                         ) : (
                           <span className="text-slate-400 text-xs italic">—</span>
                         )}
                       </td>
 
-                      {/* Type of Work Button */}
+                      {/* Compliance Schedule Modal Button */}
                       <td className="px-5 py-3 whitespace-nowrap">
                         {matchedTax ? (
                           <button
@@ -315,15 +317,12 @@ const WorkMasterPage = () => {
                             className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/80 hover:bg-blue-100 hover:border-blue-300 transition-colors cursor-pointer group/btn"
                             title="Click to view full Tax Master specifications"
                           >
-                            <Tag className="w-3 h-3 text-blue-500" />
-                            <span>{work.typeOfWork}</span>
+                            <CalendarClock className="w-3 h-3 text-blue-500" />
+                            <span>{matchedTax.frequency || 'Monthly'} Schedule</span>
                             <Info className="w-3 h-3 text-blue-400 group-hover/btn:text-blue-600 ml-0.5" />
                           </button>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                            <Tag className="w-3 h-3 text-slate-400" />
-                            {work.typeOfWork}
-                          </span>
+                          <span className="text-slate-400 text-xs italic">—</span>
                         )}
                       </td>
 

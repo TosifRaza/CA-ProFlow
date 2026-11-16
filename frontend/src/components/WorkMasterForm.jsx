@@ -91,7 +91,9 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
         fetchTaxDetailById(editingRecord.taxDetailId);
       } else if (editingRecord.typeOfWork && savedTaxMasters.length > 0) {
         const found = savedTaxMasters.find(
-          (t) => t.description.toLowerCase() === editingRecord.typeOfWork.toLowerCase()
+          (t) =>
+            (t.taxGroup && t.taxGroup.toLowerCase() === editingRecord.typeOfWork.toLowerCase()) ||
+            t.description.toLowerCase() === editingRecord.typeOfWork.toLowerCase()
         );
         if (found) {
           fetchTaxDetailById(found.id);
@@ -135,11 +137,14 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
       setFeedback({ type: '', message: '' });
     }
 
-    const matchingTax = savedTaxMasters.find((t) => t.description === selectedVal);
+    const matchingTax = savedTaxMasters.find(
+      (t) => (t.taxGroup || '') === selectedVal || t.description === selectedVal || String(t.id) === selectedVal
+    );
     if (matchingTax) {
+      const taxName = matchingTax.taxGroup || matchingTax.description;
       setFormData((prev) => ({
         ...prev,
-        typeOfWork: matchingTax.description,
+        typeOfWork: taxName,
         taxDetailId: matchingTax.id,
         taxGroup: matchingTax.taxGroup || '',
         taxGroupId: matchingTax.taxGroupId || null,
@@ -166,7 +171,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
     }
 
     if (!formData.typeOfWork.trim()) {
-      newErrors.typeOfWork = 'Please select a Type of Work';
+      newErrors.typeOfWork = 'Please select a Tax Name';
     }
 
     setErrors(newErrors);
@@ -259,7 +264,7 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
               </h2>
             </div>
             <p className="text-xs text-slate-500 font-normal">
-              Allocate work names and link statutory Tax Groups with compliance schedules.
+              Allocate work names and link statutory Tax Names with compliance schedules.
             </p>
           </div>
         </div>
@@ -321,13 +326,13 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                 )}
               </div>
 
-              {/* Field 2: Type of Work (Linked Tax Master) */}
+              {/* Field 2: Tax Name (Linked Tax Master) */}
               <div className="col-span-12 sm:col-span-6">
                 <label
                   htmlFor="typeOfWork"
                   className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
                 >
-                  Type of Work <span className="text-rose-500">*</span>
+                  Tax Name <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <select
@@ -343,10 +348,10 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                         : 'border-slate-300 focus:ring-blue-100 focus:border-[#0066f5]'
                     }`}
                   >
-                    <option value="">Select from Saved Tax Masters</option>
+                    <option value="">Select Tax Name</option>
                     {savedTaxMasters.map((tax) => (
-                      <option key={tax.id} value={tax.description}>
-                        {tax.description} {tax.taxGroup ? `(${tax.taxGroup})` : ''}
+                      <option key={tax.id} value={tax.taxGroup || tax.description}>
+                        {tax.taxGroup || tax.description}
                       </option>
                     ))}
                   </select>
@@ -374,15 +379,10 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                       Linked Schedule Details
                     </span>
                     <span className="text-xs font-semibold text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200">
-                      {selectedTaxDetail.description}
+                      {selectedTaxDetail.taxGroup || selectedTaxDetail.description}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    {formData.taxGroup && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                        {formData.taxGroup}
-                      </span>
-                    )}
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
                       {selectedTaxDetail.frequency || 'Monthly'}
                     </span>

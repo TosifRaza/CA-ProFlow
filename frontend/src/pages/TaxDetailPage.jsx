@@ -108,7 +108,7 @@ const TaxDetailPage = () => {
   }, [taxDetails]);
 
   return (
-    <div className="flex-1 p-5 md:p-7 max-w-[1300px] mx-auto space-y-5">
+    <div className="w-full max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-1">
         <div>
@@ -190,28 +190,28 @@ const TaxDetailPage = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm text-slate-700">
+            <table className="w-full text-left text-xs text-slate-700">
               <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
-                  <th scope="col" className="px-4 py-3">Tax Name</th>
-                  <th scope="col" className="px-4 py-3">Task Description</th>
-                  <th scope="col" className="px-4 py-3">Frequency</th>
-                  <th scope="col" className="px-4 py-3">Period (From – To)</th>
-                  <th scope="col" className="px-4 py-3">Submission Date</th>
-                  <th scope="col" className="px-4 py-3">Reconciliation Date</th>
-                  <th scope="col" className="px-4 py-3">Extend Date</th>
-                  <th scope="col" className="px-4 py-3 text-right">Actions</th>
+                  <th scope="col" className="px-3.5 py-2.5 whitespace-nowrap">Tax Name</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Task Description</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Frequency</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Period (From – To)</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Submission Date</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Reconciliation Date</th>
+                  <th scope="col" className="px-3 py-2.5 whitespace-nowrap">Extend Date</th>
+                  <th scope="col" className="px-3.5 py-2.5 text-right whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredTaxDetails.map((tax) => (
                   <tr key={tax.id} className="hover:bg-slate-50/70 transition-colors group">
                     {/* Tax Group Badge */}
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-3.5 py-2.5 whitespace-nowrap">
                       {tax.taxGroup ? (
                         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                          <FolderTree className="w-3 h-3 text-slate-500" />
-                          <span>{tax.taxGroup}</span>
+                          <FolderTree className="w-3 h-3 text-slate-500 shrink-0" />
+                          <span className="truncate max-w-[180px]" title={tax.taxGroup}>{tax.taxGroup}</span>
                         </span>
                       ) : (
                         <span className="text-slate-400 text-xs italic">—</span>
@@ -219,41 +219,41 @@ const TaxDetailPage = () => {
                     </td>
 
                     {/* Task Description */}
-                    <td className="px-4 py-3 font-semibold text-slate-900">
-                      <span className="truncate max-w-[240px] block" title={tax.description}>
+                    <td className="px-3 py-2.5 font-semibold text-slate-900">
+                      <span className="truncate max-w-[200px] 2xl:max-w-[280px] block" title={tax.description}>
                         {tax.description}
                       </span>
                     </td>
 
                     {/* Frequency */}
-                    <td className="px-4 py-3 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap">
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
                         {tax.frequency || 'Monthly'}
                       </span>
                     </td>
 
                     {/* Date (From - To) */}
-                    <td className="px-4 py-3 text-xs text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 text-xs text-slate-600 whitespace-nowrap">
                       {formatDate(tax.dateFrom)} – {formatDate(tax.dateTo)}
                     </td>
 
                     {/* Submission Date */}
-                    <td className="px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">
+                    <td className="px-3 py-2.5 text-xs font-medium text-slate-700 whitespace-nowrap">
                       {formatDate(tax.submissionDate)}
                     </td>
 
                     {/* Reconciliation Date */}
-                    <td className="px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">
+                    <td className="px-3 py-2.5 text-xs font-medium text-slate-700 whitespace-nowrap">
                       {formatDate(tax.reconciliationDate)}
                     </td>
 
                     {/* Extend Date */}
-                    <td className="px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">
+                    <td className="px-3 py-2.5 text-xs font-medium text-slate-700 whitespace-nowrap">
                       {formatDate(tax.extendDate)}
                     </td>
 
                     {/* Actions */}
-                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                    <td className="px-3.5 py-2.5 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           type="button"

@@ -99,7 +99,7 @@ const TaxGroupPage = () => {
   }, [taxGroups, searchFilter]);
 
   return (
-    <div className="flex-1 p-5 md:p-7 max-w-[1300px] mx-auto space-y-5">
+    <div className="w-full max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-1">
         <div>

@@ -7,19 +7,10 @@ import {
   AlertCircle,
   Loader2,
   Tag,
-  Sparkles,
   Info,
   FolderPlus,
 } from 'lucide-react';
 import { taxGroupApi } from '../services/api';
-
-const QUICK_PRESETS = [
-  'Goods & Services Tax (GST)',
-  'Direct Taxes & Income Tax',
-  'Tax Deducted at Source (TDS)',
-  'Customs & Excise Duty',
-  'Professional Tax (PT)',
-];
 
 const TaxGroupForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -50,13 +41,6 @@ const TaxGroupForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
     }
     if (feedback.message) {
       setFeedback({ type: '', message: '' });
-    }
-  };
-
-  const handlePresetClick = (preset) => {
-    setFormData((prev) => ({ ...prev, taxName: preset }));
-    if (errors.taxName) {
-      setErrors((prev) => ({ ...prev, taxName: '' }));
     }
   };
 
@@ -217,26 +201,6 @@ const TaxGroupForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
               {errors.taxName && (
                 <p className="mt-1 text-xs text-rose-600 font-medium">{errors.taxName}</p>
               )}
-            </div>
-
-            {/* Quick Presets / Suggestions */}
-            <div>
-              <span className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-500" />
-                Quick Suggestions (Click to fill)
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {QUICK_PRESETS.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => handlePresetClick(preset)}
-                    className="text-xs px-2.5 py-1 rounded-md bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 font-medium transition-all duration-150 cursor-pointer shadow-2xs"
-                  >
-                    + {preset}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 

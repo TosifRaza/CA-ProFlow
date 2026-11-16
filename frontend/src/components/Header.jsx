@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, ChevronDown, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 const Header = () => {
   return (
@@ -74,27 +74,6 @@ const Header = () => {
             3
           </span>
         </button>
-
-        {/* Company Profile Dropdown */}
-        <div className="relative pl-1 border-l border-slate-200/80">
-          <button
-            type="button"
-            className="flex items-center gap-2.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl text-slate-800 transition-all border border-slate-200/70 shadow-2xs cursor-pointer group"
-          >
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
-              RA
-            </div>
-            <div className="text-left hidden sm:block">
-              <span className="block text-xs font-bold text-slate-800 leading-tight group-hover:text-[#0066f5] transition-colors">
-                RIZ & Associates
-              </span>
-              <span className="block text-[10px] font-medium text-slate-400 leading-tight">
-                Chartered Accountants
-              </span>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-          </button>
-        </div>
       </div>
     </header>
   );

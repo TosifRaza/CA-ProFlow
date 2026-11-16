@@ -374,29 +374,8 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
               )}
             </div>
 
-            {/* 2. DYNAMIC FORM UNFOLDING */}
-            {!formData.taxGroup ? (
-              <div className="py-5 px-4 bg-slate-50/70 rounded-xl border border-dashed border-slate-200 text-center flex flex-col items-center justify-center gap-1.5 transition-all">
-                <p className="text-xs sm:text-sm font-medium text-slate-600">
-                  Select a <span className="font-semibold text-slate-800">Tax</span> above to enter or configure its statutory schedule details.
-                </p>
-                {savedTaxGroups.length > 0 && (
-                  <div className="flex flex-wrap items-center justify-center gap-1.5 mt-1.5">
-                    <span className="text-[11px] text-slate-400">Quick select:</span>
-                    {savedTaxGroups.map((tg) => (
-                      <button
-                        key={tg.id}
-                        type="button"
-                        onClick={() => handleTaxGroupChange(tg.taxName)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-xs font-medium shadow-2xs transition-all cursor-pointer"
-                      >
-                        <span>{tg.taxName}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
+            {/* 2. DYNAMIC FORM UNFOLDING (Only opens when a Tax Name is selected) */}
+            {Boolean(formData.taxGroup) && (
               /* THE DETAILS FORM: 2-Row / 3-Column Responsive Grid */
               <div className="space-y-4 pt-1 animate-in fade-in slide-in-from-top-1 duration-150">
                 {/* Active Context Banner */}

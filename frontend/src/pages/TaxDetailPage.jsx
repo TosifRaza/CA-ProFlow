@@ -137,7 +137,8 @@ const TaxDetailPage = () => {
       </div>
 
       {/* Hero Stats & KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+      {/* Hero Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-xl">
         <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
@@ -165,21 +166,6 @@ const TaxDetailPage = () => {
           </div>
           <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
             <FolderTree className="w-4 h-4" />
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
-              Work Master Link
-            </span>
-            <div className="flex items-baseline gap-1.5 mt-0.5">
-              <span className="text-xl sm:text-2xl font-bold text-emerald-600">Active</span>
-              <span className="text-xs text-slate-500">Ready</span>
-            </div>
-          </div>
-          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
-            <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
       </div>

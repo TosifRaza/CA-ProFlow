@@ -126,23 +126,6 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
     }
   };
 
-  const handleTaxGroupChange = (e) => {
-    const selectedVal = e.target.value;
-    if (errors.taxGroup) {
-      setErrors((prev) => ({ ...prev, taxGroup: '' }));
-    }
-    if (feedback.message) {
-      setFeedback({ type: '', message: '' });
-    }
-
-    const matchingGroup = savedTaxGroups.find((tg) => tg.taxName === selectedVal);
-    setFormData((prev) => ({
-      ...prev,
-      taxGroup: selectedVal,
-      taxGroupId: matchingGroup ? matchingGroup.id : null,
-    }));
-  };
-
   const handleTypeOfWorkChange = (e) => {
     const selectedVal = e.target.value;
     if (errors.typeOfWork) {
@@ -158,8 +141,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
         ...prev,
         typeOfWork: matchingTax.description,
         taxDetailId: matchingTax.id,
-        taxGroup: prev.taxGroup || matchingTax.taxGroup || '',
-        taxGroupId: prev.taxGroupId || matchingTax.taxGroupId || null,
+        taxGroup: matchingTax.taxGroup || '',
+        taxGroupId: matchingTax.taxGroupId || null,
       }));
       // Fetch full details of that tax master
       fetchTaxDetailById(matchingTax.id);
@@ -168,6 +151,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
         ...prev,
         typeOfWork: selectedVal,
         taxDetailId: null,
+        taxGroup: '',
+        taxGroupId: null,
       }));
       setSelectedTaxDetail(null);
     }
@@ -180,12 +165,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
       newErrors.workName = 'Work Name is required';
     }
 
-    if (!formData.taxGroup.trim()) {
-      newErrors.taxGroup = 'Please select a Tax Group';
-    }
-
     if (!formData.typeOfWork.trim()) {
-      newErrors.typeOfWork = 'Please select a Tax Master for Type of Work';
+      newErrors.typeOfWork = 'Please select a Type of Work';
     }
 
     setErrors(newErrors);
@@ -313,10 +294,10 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
           )}
 
           <div className="space-y-4">
-            {/* 3 Main Inputs in Responsive Grid */}
+            {/* 2 Main Inputs in Responsive Grid */}
             <div className="grid grid-cols-12 gap-3.5">
               {/* Field 1: Work Name */}
-              <div className="col-span-12 sm:col-span-4">
+              <div className="col-span-12 sm:col-span-6">
                 <label
                   htmlFor="workName"
                   className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
@@ -340,46 +321,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                 )}
               </div>
 
-              {/* Field 2: Tax Group */}
-              <div className="col-span-12 sm:col-span-4">
-                <label
-                  htmlFor="taxGroup"
-                  className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
-                >
-                  Tax Group <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    id="taxGroup"
-                    value={formData.taxGroup}
-                    onFocus={() => fetchTaxGroups(false)}
-                    onChange={handleTaxGroupChange}
-                    className={`w-full h-10 px-3.5 pr-10 text-sm rounded-lg border bg-white appearance-none transition-all focus:outline-none focus:ring-2 cursor-pointer ${
-                      !formData.taxGroup ? 'text-slate-400 font-medium' : 'text-slate-900 font-semibold'
-                    } ${
-                      errors.taxGroup
-                        ? 'border-rose-400 focus:ring-rose-100 focus:border-rose-500'
-                        : 'border-slate-300 focus:ring-blue-100 focus:border-[#0066f5]'
-                    }`}
-                  >
-                    <option value="">Select Tax Group</option>
-                    {savedTaxGroups.map((group) => (
-                      <option key={group.id} value={group.taxName}>
-                        {group.taxName}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </div>
-                {errors.taxGroup && (
-                  <p className="mt-1 text-xs text-rose-600 font-medium">{errors.taxGroup}</p>
-                )}
-              </div>
-
-              {/* Field 3: Type of Work */}
-              <div className="col-span-12 sm:col-span-4">
+              {/* Field 2: Type of Work (Linked Tax Master) */}
+              <div className="col-span-12 sm:col-span-6">
                 <label
                   htmlFor="typeOfWork"
                   className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"

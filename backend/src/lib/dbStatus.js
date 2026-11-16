@@ -1,6 +1,6 @@
 let isDbDown = false;
 let lastDbCheck = 0;
-const RETRY_INTERVAL_MS = 60000; // Check DB availability once every 60s if down
+const RETRY_INTERVAL_MS = 300000; // Check DB availability once every 5 minutes if down
 
 const dbStatus = {
   shouldTryDb() {

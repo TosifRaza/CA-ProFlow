@@ -2,15 +2,11 @@ const { PrismaClient } = require('@prisma/client');
 
 let prisma;
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient({
-      log: ['warn', 'error'],
-    });
-  }
-  prisma = global.prisma;
+if (!global.prisma) {
+  global.prisma = new PrismaClient({
+    log: [], // Suppress noisy stderr stack traces when PostgreSQL is offline
+  });
 }
+prisma = global.prisma;
 
 module.exports = prisma;

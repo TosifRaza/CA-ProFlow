@@ -156,11 +156,11 @@ const TaxDetailPage = () => {
         <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
-              Covered Tax Groups
+              Covered Tax Names
             </span>
             <div className="flex items-baseline gap-1.5 mt-0.5">
               <span className="text-xl sm:text-2xl font-bold text-slate-900">{distinctGroupsCount}</span>
-              <span className="text-xs text-slate-500">Groups</span>
+              <span className="text-xs text-slate-500">Taxes</span>
             </div>
           </div>
           <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
@@ -209,7 +209,7 @@ const TaxDetailPage = () => {
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              placeholder="Filter by task or tax group..."
+              placeholder="Filter by task or tax name..."
               className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-2xs"
             />
           </div>
@@ -241,7 +241,7 @@ const TaxDetailPage = () => {
             <table className="w-full text-left text-xs sm:text-sm text-slate-700">
               <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
-                  <th scope="col" className="px-4 py-3">Tax Group</th>
+                  <th scope="col" className="px-4 py-3">Tax Name</th>
                   <th scope="col" className="px-4 py-3">Task Description</th>
                   <th scope="col" className="px-4 py-3">Frequency</th>
                   <th scope="col" className="px-4 py-3">Period (From – To)</th>

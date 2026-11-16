@@ -138,7 +138,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
     const newErrors = {};
 
     if (!formData.taxGroup.trim()) {
-      newErrors.taxGroup = 'Please select a Tax first';
+      newErrors.taxGroup = 'Please select a Tax Name first';
     }
 
     if (!formData.description.trim()) {
@@ -292,7 +292,7 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
               </h2>
             </div>
             <p className="text-xs text-slate-500 font-normal">
-              Configure statutory filing periods, target dates, and extended deadlines under each Tax Group.
+              Configure statutory filing periods, target dates, and extended deadlines under each Tax Name.
             </p>
           </div>
         </div>
@@ -335,11 +335,11 @@ const TaxDetailForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
                   className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
                 >
                   <FolderTree className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Select Tax (Tax Group)</span>
+                  <span>Tax Name</span>
                   <span className="text-rose-500">*</span>
                 </label>
                 <span className="text-[11px] text-slate-400">
-                  {savedTaxGroups.length} Tax Group{savedTaxGroups.length === 1 ? '' : 's'} available
+                  {savedTaxGroups.length} Tax{savedTaxGroups.length === 1 ? '' : 'es'} available
                 </span>
               </div>
 

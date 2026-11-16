@@ -277,7 +277,7 @@ const WorkMasterPage = () => {
               <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th scope="col" className="px-5 py-3">Work Name</th>
-                  <th scope="col" className="px-5 py-3">Tax Group</th>
+                  <th scope="col" className="px-5 py-3">Tax Name</th>
                   <th scope="col" className="px-5 py-3">Type of Work / Linked Tax</th>
                   <th scope="col" className="px-5 py-3">Created Date</th>
                   <th scope="col" className="px-5 py-3 text-right">Actions</th>

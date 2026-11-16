@@ -99,8 +99,18 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
           fetchTaxDetailById(found.id);
         }
       }
+    } else {
+      setFormData({
+        workName: '',
+        taxGroup: '',
+        taxGroupId: null,
+        typeOfWork: '',
+        taxDetailId: null,
+      });
+      setSelectedTaxDetail(null);
+      setErrors({});
     }
-  }, [editingRecord, savedTaxMasters]);
+  }, [editingRecord]);
 
   const fetchTaxDetailById = async (id) => {
     try {
@@ -195,6 +205,8 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
           type: 'success',
           message: res.message || 'Work Master updated successfully!',
         });
+        setFormData({ workName: '', taxGroup: '', taxGroupId: null, typeOfWork: '', taxDetailId: null });
+        setSelectedTaxDetail(null);
         if (onRecordSaved) onRecordSaved(res.data, 'update');
       } else {
         const res = await workMasterApi.create(formData);

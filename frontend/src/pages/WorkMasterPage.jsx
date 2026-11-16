@@ -81,10 +81,11 @@ const WorkMasterPage = () => {
       setWorkMasters((prev) => [savedRecord, ...prev]);
     } else if (action === 'update') {
       setWorkMasters((prev) =>
-        prev.map((item) => (item.id === savedRecord.id ? savedRecord : item))
+        prev.map((item) => (Number(item.id) === Number(savedRecord.id) ? savedRecord : item))
       );
       setEditingRecord(null);
     }
+    fetchWorkMasters();
   };
 
   const handleEdit = (record) => {

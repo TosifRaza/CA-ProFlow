@@ -365,64 +365,104 @@ const WorkMasterForm = ({ onRecordSaved, editingRecord, onCancelEdit }) => {
               </div>
             </div>
 
-            {/* FULL DETAILS CARD: Shows ALL 6 Tax Master Fields cleanly */}
+            {/* FULL DETAILS CARD: Shows ALL Tax Master Fields with clear titles */}
             {loadingTaxDetail ? (
               <div className="p-3 bg-blue-50/50 border border-blue-200/60 rounded-lg flex items-center justify-center gap-2 text-xs text-blue-700">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 <span>Loading Tax Master specifications...</span>
               </div>
             ) : selectedTaxDetail ? (
-              <div className="bg-slate-50/70 border border-blue-200/70 rounded-xl p-4 shadow-2xs transition-all duration-200">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
+              <div className="bg-slate-50/80 border border-blue-200/80 rounded-xl p-4 shadow-2xs transition-all duration-200 space-y-3">
+                {/* Header: Tax Name & Frequency */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200/70">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-slate-800">
                       Linked Schedule Details
                     </span>
-                    <span className="text-xs font-semibold text-blue-700 bg-white px-2 py-0.5 rounded border border-blue-200">
-                      {selectedTaxDetail.taxGroup || selectedTaxDetail.description}
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-900 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200 shadow-2xs">
+                      <Layers className="w-3.5 h-3.5 text-blue-600" />
+                      <span>{selectedTaxDetail.taxGroup || selectedTaxDetail.description}</span>
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
-                      {selectedTaxDetail.frequency || 'Monthly'}
+                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                      Frequency:
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-bold bg-white text-blue-700 border border-blue-200 shadow-2xs">
+                      <Repeat className="w-3 h-3 text-blue-600" />
+                      <span>{selectedTaxDetail.frequency || 'Monthly'}</span>
                     </span>
                   </div>
                 </div>
 
-                {/* 4 Attributes in Clean Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-3 text-xs">
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">
-                      Period (From – To)
+                {/* 1. Task Description */}
+                <div className="bg-white p-3 rounded-lg border border-slate-200/90 shadow-2xs">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <FileText className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Task Description
                     </span>
-                    <span className="text-slate-800 font-semibold text-xs mt-0.5 block">
+                  </div>
+                  <p className="text-xs font-semibold text-slate-800 break-words leading-relaxed pl-5">
+                    {selectedTaxDetail.description || '—'}
+                  </p>
+                </div>
+
+                {/* 2. Grid of 4 Date Attributes */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
+                  {/* Period (From – To) */}
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                        Period (From – To)
+                      </span>
+                    </div>
+                    <span className="text-slate-800 font-semibold text-xs block pl-4.5">
                       {formatDate(selectedTaxDetail.dateFrom)} – {formatDate(selectedTaxDetail.dateTo)}
+                      {selectedTaxDetail.timeFrom && selectedTaxDetail.timeTo && (
+                        <span className="text-slate-500 text-[11px] block mt-0.5">
+                          ({selectedTaxDetail.timeFrom} – {selectedTaxDetail.timeTo})
+                        </span>
+                      )}
                     </span>
                   </div>
 
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">
-                      Submission Date
-                    </span>
-                    <span className="text-slate-800 font-semibold text-xs mt-0.5 block">
+                  {/* Submission Date */}
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-500" />
+                      <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                        Submission Date
+                      </span>
+                    </div>
+                    <span className="text-slate-800 font-semibold text-xs block pl-4.5">
                       {formatDate(selectedTaxDetail.submissionDate)}
                     </span>
                   </div>
 
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">
-                      Reconciliation Date
-                    </span>
-                    <span className="text-slate-800 font-semibold text-xs mt-0.5 block">
+                  {/* Reconciliation Date */}
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                      <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                        Reconciliation Date
+                      </span>
+                    </div>
+                    <span className="text-slate-800 font-semibold text-xs block pl-4.5">
                       {formatDate(selectedTaxDetail.reconciliationDate)}
                     </span>
                   </div>
 
-                  <div className="bg-white p-2.5 rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[10px] font-semibold uppercase tracking-wider">
-                      Extend Date
-                    </span>
-                    <span className="text-slate-800 font-semibold text-xs mt-0.5 block">
+                  {/* Extend Date */}
+                  <div className="bg-white p-2.5 rounded-lg border border-slate-200 shadow-2xs">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Calendar className="w-3.5 h-3.5 text-rose-500" />
+                      <span className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                        Extend Date
+                      </span>
+                    </div>
+                    <span className="text-slate-800 font-semibold text-xs block pl-4.5">
                       {formatDate(selectedTaxDetail.extendDate)}
                     </span>
                   </div>

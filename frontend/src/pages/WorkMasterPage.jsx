@@ -405,16 +405,16 @@ const WorkMasterPage = () => {
 
             {/* Modal Body: ALL attributes in dedicated labeled boxes */}
             <div className="mt-5 space-y-3 text-xs">
-              {/* Tax Group (when linked to a work item) */}
-              {modalTaxDetail.parentWork?.taxGroup && (
+              {/* Tax Name (when linked to a work item) */}
+              {(modalTaxDetail.parentWork?.taxGroup || modalTaxDetail.taxGroup) && (
                 <div className="p-3 bg-indigo-50/70 border border-indigo-200/80 rounded-xl flex items-start gap-2.5">
                   <Layers className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-indigo-600 block text-[10px] font-bold uppercase tracking-wider">
-                      Tax Group
+                      Tax Name
                     </span>
                     <span className="text-indigo-950 font-bold text-sm">
-                      {modalTaxDetail.parentWork.taxGroup}
+                      {modalTaxDetail.parentWork?.taxGroup || modalTaxDetail.taxGroup}
                     </span>
                   </div>
                 </div>

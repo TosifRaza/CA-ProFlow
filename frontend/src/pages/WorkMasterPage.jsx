@@ -144,25 +144,18 @@ const WorkMasterPage = () => {
   }, [workMasters, searchFilter]);
 
   return (
-    <div className="flex-1 p-6 md:p-8 max-w-6xl mx-auto space-y-6">
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-        <span>Compliance Masters</span>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
-        <span className="text-blue-600 font-semibold">Work Master</span>
-      </div>
-
+    <div className="flex-1 p-5 md:p-7 max-w-[1300px] mx-auto space-y-5">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-1">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Work Master</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
-              Task Workflows
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Work Master</h1>
+            <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              Work Workflows
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Map work items to statutory Tax Groups and compliance tasks from your Tax Master.
+          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Allocate work items and map client jobs to statutory Tax Groups and compliance schedules.
           </p>
         </div>
 
@@ -171,7 +164,7 @@ const WorkMasterPage = () => {
           <button
             type="button"
             onClick={fetchWorkMasters}
-            className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200/90 shadow-2xs transition-all hover:border-slate-300 cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs transition-all hover:border-slate-300 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-600' : 'text-slate-500'}`} />
             <span>Sync Data</span>
@@ -180,48 +173,48 @@ const WorkMasterPage = () => {
       </div>
 
       {/* Hero Stats & KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_0_rgba(15,23,42,0.03)] flex items-center justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-              Work Allocations
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
+              Work Items
             </span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-slate-900">{workMasters.length}</span>
-              <span className="text-xs font-semibold text-blue-600">Active Work Items</span>
+            <div className="flex items-baseline gap-1.5 mt-0.5">
+              <span className="text-xl sm:text-2xl font-bold text-slate-900">{workMasters.length}</span>
+              <span className="text-xs text-slate-500">Active</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
-            <Briefcase className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+            <Briefcase className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_0_rgba(15,23,42,0.03)] flex items-center justify-between">
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-              Inter-Master Links
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
+              Compliance Scope
             </span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-slate-900">Tax Group & Master</span>
+            <div className="flex items-baseline gap-1.5 mt-0.5">
+              <span className="text-xl sm:text-2xl font-bold text-slate-900">Tax & Work Linked</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
-            <Layers className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-100">
+            <Layers className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white p-4.5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_0_rgba(15,23,42,0.03)] flex items-center justify-between">
+        <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">
               Workflow Status
             </span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-emerald-600">Connected</span>
-              <span className="text-[10px] text-slate-400 font-medium">Full Specifications Synced</span>
+            <div className="flex items-baseline gap-1.5 mt-0.5">
+              <span className="text-xl sm:text-2xl font-bold text-emerald-600">Connected</span>
+              <span className="text-xs text-slate-500">Synced</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+            <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
       </div>
@@ -234,65 +227,60 @@ const WorkMasterPage = () => {
       />
 
       {/* Saved Records Section with Toolbar & Table */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.05)] overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
         {/* Table Toolbar */}
-        <div className="p-4 sm:px-6 sm:py-4.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
-              <Briefcase className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">Saved Work Items</h2>
-              <p className="text-[11px] text-slate-500 font-normal">
-                {filteredWorkMasters.length} of {workMasters.length} total work items configured
-              </p>
-            </div>
+        <div className="px-5 py-3.5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900">Saved Work Items</h2>
+            <p className="text-[11px] text-slate-500">
+              {filteredWorkMasters.length} of {workMasters.length} total work items configured
+            </p>
           </div>
 
           {/* Search Box */}
           <div className="relative min-w-[240px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
             <input
               type="text"
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               placeholder="Filter work items or tax..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-2xs"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-2xs"
             />
           </div>
         </div>
 
         {error && (
-          <div className="m-4 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-sm flex items-center gap-2.5">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+          <div className="m-4 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs sm:text-sm flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Table View */}
         {loading && workMasters.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 text-xs flex flex-col items-center justify-center gap-2">
-            <RefreshCw className="w-6 h-6 animate-spin text-blue-500" />
+          <div className="py-12 text-center text-slate-400 text-xs flex flex-col items-center justify-center gap-2">
+            <RefreshCw className="w-5 h-5 animate-spin text-blue-500" />
             <span>Loading Work Masters...</span>
           </div>
         ) : filteredWorkMasters.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 text-xs flex flex-col items-center justify-center gap-2">
-            <Database className="w-8 h-8 text-slate-300 stroke-[1.5]" />
+          <div className="py-12 text-center text-slate-400 text-xs flex flex-col items-center justify-center gap-1.5">
+            <Database className="w-7 h-7 text-slate-300 stroke-[1.5]" />
             <p className="font-semibold text-slate-600 text-sm">No work masters found</p>
-            <p className="text-slate-400">
+            <p className="text-slate-400 text-xs">
               {searchFilter ? 'Try clearing your search filter.' : 'Fill the form above to add your first work item.'}
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm text-slate-700">
-              <thead className="bg-[#f8fafc] text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+              <thead className="bg-[#f8fafc] text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
                 <tr>
-                  <th scope="col" className="px-6 py-3.5">Work Name</th>
-                  <th scope="col" className="px-6 py-3.5">Tax Group</th>
-                  <th scope="col" className="px-6 py-3.5">Type of Work / Linked Tax</th>
-                  <th scope="col" className="px-6 py-3.5">Created Date</th>
-                  <th scope="col" className="px-6 py-3.5 text-right">Actions</th>
+                  <th scope="col" className="px-5 py-3">Work Name</th>
+                  <th scope="col" className="px-5 py-3">Tax Group</th>
+                  <th scope="col" className="px-5 py-3">Type of Work / Linked Tax</th>
+                  <th scope="col" className="px-5 py-3">Created Date</th>
+                  <th scope="col" className="px-5 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -300,29 +288,17 @@ const WorkMasterPage = () => {
                   const matchedTax = findMatchingTax(work);
 
                   return (
-                    <tr key={work.id} className="hover:bg-blue-50/25 transition-colors group">
+                    <tr key={work.id} className="hover:bg-slate-50/70 transition-colors group">
                       {/* Work Name */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-200/60 font-bold text-xs">
-                            <Briefcase className="w-3.5 h-3.5" />
-                          </div>
-                          <div>
-                            <span className="font-bold text-slate-900 block text-xs sm:text-sm leading-tight">
-                              {work.workName}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-medium">
-                              Client Workflow
-                            </span>
-                          </div>
-                        </div>
+                      <td className="px-5 py-3 font-semibold text-slate-900">
+                        {work.workName}
                       </td>
 
                       {/* Tax Group Badge */}
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         {work.taxGroup ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
-                            <Layers className="w-3.5 h-3.5 text-indigo-500" />
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                            <Layers className="w-3 h-3 text-slate-500" />
                             {work.taxGroup}
                           </span>
                         ) : (
@@ -331,12 +307,12 @@ const WorkMasterPage = () => {
                       </td>
 
                       {/* Type of Work Button */}
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         {matchedTax ? (
                           <button
                             type="button"
                             onClick={() => setModalTaxDetail({ ...matchedTax, parentWork: work })}
-                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 hover:bg-blue-100 hover:border-blue-300 transition-colors cursor-pointer group/btn"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/80 hover:bg-blue-100 hover:border-blue-300 transition-colors cursor-pointer group/btn"
                             title="Click to view full Tax Master specifications"
                           >
                             <Tag className="w-3 h-3 text-blue-500" />
@@ -344,7 +320,7 @@ const WorkMasterPage = () => {
                             <Info className="w-3 h-3 text-blue-400 group-hover/btn:text-blue-600 ml-0.5" />
                           </button>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
                             <Tag className="w-3 h-3 text-slate-400" />
                             {work.typeOfWork}
                           </span>
@@ -352,20 +328,17 @@ const WorkMasterPage = () => {
                       </td>
 
                       {/* Created Date */}
-                      <td className="px-6 py-4 text-slate-600">
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                          <span>{formatDate(work.createdAt)}</span>
-                        </div>
+                      <td className="px-5 py-3 text-xs text-slate-600 whitespace-nowrap">
+                        {formatDate(work.createdAt)}
                       </td>
 
                       {/* Actions */}
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="px-5 py-3 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1">
                           <button
                             type="button"
                             onClick={() => handleEdit(work)}
-                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer border border-transparent hover:border-blue-200"
+                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
                             title="Edit Work Master"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -374,7 +347,7 @@ const WorkMasterPage = () => {
                             type="button"
                             onClick={() => handleDelete(work.id)}
                             disabled={deleteId === work.id}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50 border border-transparent hover:border-rose-200"
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                             title="Delete Work Master"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -390,9 +363,9 @@ const WorkMasterPage = () => {
         )}
 
         {/* Table Footer */}
-        <div className="px-6 py-3 border-t border-slate-100 bg-slate-50/40 text-[11px] text-slate-500 flex items-center justify-between">
+        <div className="px-5 py-2.5 border-t border-slate-100 bg-slate-50/40 text-[11px] text-slate-400 flex items-center justify-between">
           <span>Showing {filteredWorkMasters.length} work allocation item(s)</span>
-          <span className="font-medium text-slate-400">CA ProFlow Master Management</span>
+          <span>CA ProFlow Work Management</span>
         </div>
       </div>
 

@@ -10,9 +10,9 @@ const Header = () => {
       <div className="flex items-center gap-3.5">
         {/* Stylized CA Emblem */}
         <div className="relative flex items-center justify-center">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0052cc] via-[#0066f5] to-[#388bfd] flex items-center justify-center shadow-[0_2px_8px_-2px_rgba(0,102,245,0.4)] text-white">
+          <div className="w-8.5 h-8.5 rounded-lg bg-gradient-to-tr from-[#0052cc] via-[#0066f5] to-[#388bfd] flex items-center justify-center shadow-xs text-white">
             <svg
-              className="w-6 h-6 select-none"
+              className="w-5 h-5 select-none"
               viewBox="0 0 48 48"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -45,16 +45,11 @@ const Header = () => {
         </div>
 
         <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            <span className="text-[#0f172a] font-black text-lg leading-tight tracking-tight">
-              CA ProFlow
-            </span>
-            <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60 uppercase tracking-wide">
-              Compliance OS
-            </span>
-          </div>
-          <span className="text-slate-500 text-[11px] font-medium leading-tight">
-            Simplifying Compliance
+          <span className="text-[#0f172a] font-bold text-base leading-tight tracking-tight">
+            CA ProFlow
+          </span>
+          <span className="text-slate-400 text-[11px] font-normal leading-tight">
+            Compliance Management
           </span>
         </div>
       </div>
